@@ -7,6 +7,7 @@ A Next.js application that transforms development notes and README files into po
 - 🤖 AI-powered blog post generation
 - 📝 Support for uploading README files
 - 🖼️ Image upload and integration
+- ✏️ Interactive revision system
 - 📤 Multiple export formats (Markdown, HTML, React)
 - 🌓 Dark mode support
 - 📱 Responsive design
@@ -34,19 +35,24 @@ npm install
 yarn install
 ```
 
-3. Create a `.env.local` file in the root directory and add your Anthropic API key:
+3. Create required directories:
+```bash
+mkdir -p public/uploads
+```
+
+4. Create a `.env.local` file in the root directory and add your Anthropic API key:
 ```env
 ANTHROPIC_API_KEY=your-api-key-here
 ```
 
-4. Start the development server:
+5. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to use the application.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser to use the application.
 
 ## Usage
 
@@ -55,8 +61,10 @@ yarn dev
 1. Enter your development notes in the text area or upload a README file
 2. (Optional) Upload relevant images to enhance your blog post
 3. Click "Generate Blog Post" to create your AI-generated blog post
-4. Select your preferred format (Markdown, HTML, or React)
-5. Click "Export" to download your blog post in the selected format
+4. Review the generated content
+5. If needed, use the revision system to request changes
+6. Select your preferred format (Markdown, HTML, or React)
+7. Click "Export" to download your blog post in the selected format
 
 ### Image Upload
 
@@ -64,12 +72,27 @@ yarn dev
 - Images will be automatically integrated into appropriate sections of your blog post
 - You can remove uploaded images by hovering over them and clicking the remove button
 - Supported formats: PNG, JPG, JPEG, GIF
-- Images are stored in the `public/uploads` directory
+- Images are stored in the `public/uploads` directory (this directory is git-ignored)
+
+### Revision System
+
+The application includes an interactive revision system that allows you to:
+- Request specific changes to the generated blog post
+- Provide detailed instructions for modifications
+- Maintain image placements during revisions
+- Make multiple iterations until the content meets your requirements
+
+To use the revision system:
+1. After generating a blog post, locate the "Request Changes" section
+2. Enter your revision instructions in the text area
+3. Click "Request Changes" to apply the modifications
+4. Review the updated content
+5. Repeat if necessary until satisfied with the result
 
 ## API Endpoints
 
 ### `/api/generate`
-Generates a blog post from provided content and images.
+Generates or revises a blog post from provided content and images.
 - Method: POST
 - Body:
   ```json
@@ -80,7 +103,9 @@ Generates a blog post from provided content and images.
         "filename": "image1.jpg",
         "url": "/uploads/image1.jpg"
       }
-    ]
+    ],
+    "revisionPrompt": "Optional revision instructions",
+    "currentPost": "Current blog post content (for revisions)"
   }
   ```
 
@@ -113,7 +138,7 @@ Converts the blog post to different formats.
 ```
 blog-post-creator/
 ├── public/
-│   └── uploads/        # Stored uploaded images
+│   └── uploads/        # Stored uploaded images (git-ignored)
 ├── src/
 │   └── app/
 │       ├── api/        # API routes
@@ -133,6 +158,12 @@ Create a `.env.local` file with the following variables:
 ```env
 ANTHROPIC_API_KEY=your-anthropic-api-key
 ```
+
+## Development Notes
+
+- The `public/uploads` directory is excluded from version control to prevent user-uploaded content from being committed
+- When setting up the project, make sure to create the `public/uploads` directory manually
+- Consider implementing a proper file storage solution (like S3) for production deployments
 
 ## Contributing
 

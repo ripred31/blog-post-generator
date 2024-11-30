@@ -5,11 +5,11 @@ export async function POST(request) {
   try {
     console.log('API Key exists:', !!process.env.ANTHROPIC_API_KEY);
     
-    const { content, images } = await request.json();
+    const { content, images, revisionPrompt, currentPost } = await request.json();
 
-    if (!content) {
+    if (!content && !revisionPrompt) {
       return NextResponse.json(
-        { error: 'Content is required' },
+        { error: 'Content or revision prompt is required' },
         { status: 400 }
       );
     }
@@ -29,24 +29,42 @@ export async function POST(request) {
 
     console.log('Attempting to create message with Claude...');
     
-    // Prepare content with image references
-    let promptContent = content;
-    if (images && images.length > 0) {
-      promptContent += '\n\nInclude the following images in appropriate sections of the blog post:\n';
-      images.forEach((image, index) => {
-        promptContent += `\nImage ${index + 1}: ${image.url}`;
-      });
-    }
-
     try {
+      let promptContent;
+      let systemPrompt;
+
+      if (revisionPrompt) {
+        // Handle revision request
+        promptContent = `Current blog post:\n${currentPost}\n\nRequested changes:\n${revisionPrompt}`;
+        systemPrompt = `You are a professional technical writer who helps revise blog posts. 
+          Review the current blog post and make the requested changes while maintaining the overall structure and quality. 
+          Return the complete revised post in HTML format with proper tags and structure.
+          If images were previously included, maintain them in appropriate positions.`;
+      } else {
+        // Handle initial blog post generation
+        promptContent = content;
+        if (images && images.length > 0) {
+          promptContent += '\n\nInclude the following images in appropriate sections of the blog post:\n';
+          images.forEach((image, index) => {
+            promptContent += `\nImage ${index + 1}: ${image.url}`;
+          });
+        }
+        systemPrompt = `You are a professional technical writer who creates engaging and informative blog posts from README files. 
+          Format your response in HTML with proper tags and structure. 
+          When image URLs are provided, include them in the blog post using appropriate HTML img tags with responsive classes. 
+          Place images in relevant sections to enhance the content.`;
+      }
+
       const message = await anthropic.messages.create({
         model: "claude-3-opus-20240229",
         max_tokens: 1500,
-        system: `You are a professional technical writer who creates engaging and informative blog posts from README files. Format your response in HTML with proper tags and structure. When image URLs are provided, include them in the blog post using appropriate HTML img tags with responsive classes. Place images in relevant sections to enhance the content.`,
+        system: systemPrompt,
         messages: [
           {
             role: "user",
-            content: `Please create a detailed blog post from this content and include any provided images in relevant sections: ${promptContent}`
+            content: revisionPrompt
+              ? `Please revise this blog post according to the following request: ${promptContent}`
+              : `Please create a detailed blog post from this content and include any provided images in relevant sections: ${promptContent}`
           }
         ]
       });
