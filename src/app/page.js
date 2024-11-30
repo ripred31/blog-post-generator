@@ -21,6 +21,12 @@ const CUSTOMIZATION_OPTIONS = {
     { value: 'overview', label: 'Overview', description: 'High-level concepts and insights' },
     { value: 'technical', label: 'Technical Analysis', description: 'In-depth technical details' },
     { value: 'storytelling', label: 'Storytelling', description: 'Narrative-driven explanation' }
+  ],
+  design: [
+    { value: 'modern', label: 'Modern', description: 'Clean and contemporary design' },
+    { value: 'classic', label: 'Classic', description: 'Traditional blog layout' },
+    { value: 'minimal', label: 'Minimal', description: 'Simple and focused presentation' },
+    { value: 'technical', label: 'Technical', description: 'Code-focused documentation style' }
   ]
 };
 
@@ -39,6 +45,7 @@ export default function Home() {
   const [selectedTone, setSelectedTone] = useState('professional');
   const [selectedAudience, setSelectedAudience] = useState('developers');
   const [selectedStyle, setSelectedStyle] = useState('overview');
+  const [selectedDesign, setSelectedDesign] = useState('modern');
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -399,6 +406,12 @@ export default function Home() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Generated Blog Post</h2>
               <div className="flex items-center space-x-3">
+                <CustomSelect
+                  label=""
+                  options={CUSTOMIZATION_OPTIONS.design}
+                  value={selectedDesign}
+                  onChange={setSelectedDesign}
+                />
                 <select
                   value={selectedFormat}
                   onChange={(e) => setSelectedFormat(e.target.value)}
@@ -424,7 +437,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="prose dark:prose-invert max-w-none min-h-[300px] bg-gray-50 dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-auto">
+            <div className={`prose dark:prose-invert max-w-none min-h-[300px] bg-gray-50 dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-auto design-${selectedDesign}`}>
               {generatedPost ? (
                 <div dangerouslySetInnerHTML={{ __html: generatedPost }} />
               ) : (

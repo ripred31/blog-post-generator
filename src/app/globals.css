@@ -52,6 +52,51 @@ body {
   transition-duration: 150ms;
 }
 
+/* Design Styles */
+.design-modern {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.7;
+  letter-spacing: -0.011em;
+}
+
+.design-modern h1, .design-modern h2, .design-modern h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.design-classic {
+  font-family: Georgia, serif;
+  line-height: 1.8;
+  letter-spacing: 0;
+}
+
+.design-classic h1, .design-classic h2, .design-classic h3 {
+  font-family: 'Times New Roman', serif;
+  font-weight: 600;
+}
+
+.design-minimal {
+  font-family: Inter, -apple-system, sans-serif;
+  line-height: 1.6;
+  letter-spacing: -0.006em;
+}
+
+.design-minimal h1, .design-minimal h2, .design-minimal h3 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.design-technical {
+  font-family: 'SF Mono', Consolas, Monaco, monospace;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.design-technical h1, .design-technical h2, .design-technical h3 {
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+}
+
 /* Code block styling */
 pre {
   background-color: #1a1a1a !important;
