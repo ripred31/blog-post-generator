@@ -3,19 +3,109 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 245, 245, 245;
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Code block styling */
+pre {
+  background-color: #1a1a1a !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  overflow-x: auto !important;
+}
+
+pre code {
+  background-color: transparent !important;
+  padding: 0 !important;
+  color: #e5e7eb !important;
+}
+
+/* Typography adjustments */
+.prose {
+  max-width: none !important;
+}
+
+.prose pre {
+  background-color: #1a1a1a !important;
+  color: #e5e7eb !important;
+}
+
+.prose code {
+  color: #ef4444 !important;
+}
+
+.prose img {
+  margin: 2rem auto !important;
+  border-radius: 0.5rem !important;
+}
+
+/* Dark mode adjustments */
+.dark .prose {
+  color: #e5e7eb !important;
+}
+
+.dark .prose code {
+  color: #f87171 !important;
+}
+
+.dark .prose a {
+  color: #60a5fa !important;
+}
+
+.dark .prose strong {
+  color: #f3f4f6 !important;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4 {
+  color: #f3f4f6 !important;
 }
