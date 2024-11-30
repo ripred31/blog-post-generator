@@ -3,30 +3,30 @@ import Anthropic from '@anthropic-ai/sdk';
 
 const getTonePrompt = (tone) => {
   const toneMap = {
-    casual: "Use a casual, conversational tone that's friendly and approachable.",
-    professional: "Maintain a professional and formal tone suitable for business contexts.",
-    educational: "Use an instructive tone that focuses on clear explanations and learning.",
-    technical: "Employ a detailed technical tone with precise terminology and in-depth explanations."
+    casual: "Write in a casual, conversational tone that's friendly and approachable. Use informal language, personal anecdotes, and relatable examples.",
+    professional: "Maintain a professional and formal tone suitable for business contexts. Use clear, precise language and industry-standard terminology.",
+    educational: "Adopt an instructive tone that prioritizes learning. Break down complex concepts, provide examples, and include explanatory notes.",
+    technical: "Employ a detailed technical tone with precise terminology and in-depth explanations. Include technical specifications and implementation details."
   };
   return toneMap[tone] || toneMap.professional;
 };
 
 const getAudiencePrompt = (audience) => {
   const audienceMap = {
-    developers: "Target software developers with appropriate technical depth and code examples.",
-    managers: "Target technical managers and decision-makers, focusing on high-level concepts and business value.",
-    enthusiasts: "Target tech enthusiasts with a balance of technical details and accessible explanations.",
-    beginners: "Target beginners with clear explanations and minimal technical jargon."
+    developers: "Write for software developers by including code examples, technical implementation details, and development best practices. Assume familiarity with programming concepts.",
+    managers: "Write for technical managers by focusing on high-level concepts, business value, and strategic implications. Minimize technical jargon and emphasize decision-making factors.",
+    enthusiasts: "Write for tech enthusiasts by balancing technical details with accessible explanations. Include both high-level concepts and interesting technical insights.",
+    beginners: "Write for beginners by explaining concepts from first principles. Define technical terms, provide context for industry concepts, and include helpful analogies."
   };
   return audienceMap[audience] || audienceMap.developers;
 };
 
 const getStylePrompt = (style) => {
   const styleMap = {
-    tutorial: "Structure the post as a step-by-step tutorial with clear instructions and examples.",
-    overview: "Present a high-level overview with key concepts and insights.",
-    technical: "Create a detailed technical analysis with in-depth explanations.",
-    storytelling: "Use a narrative approach to explain the technical content through a story."
+    tutorial: "Structure the post as a comprehensive tutorial with clear steps, code examples, and practical implementation guidance. Include prerequisites, steps to reproduce, and expected outcomes.",
+    overview: "Present a high-level overview that focuses on key concepts, benefits, and use cases. Organize content around main themes and takeaways.",
+    technical: "Create a detailed technical analysis that dives deep into implementation details, architecture decisions, and technical trade-offs. Include specific technical examples and considerations.",
+    storytelling: "Use a narrative approach to explain technical content through a story. Start with a problem or scenario, describe the journey of solving it, and conclude with lessons learned."
   };
   return styleMap[style] || styleMap.overview;
 };
@@ -67,10 +67,13 @@ export async function POST(request) {
         // Handle revision request
         promptContent = `Current blog post:\n${currentPost}\n\nRequested changes:\n${revisionPrompt}`;
         systemPrompt = `You are a professional technical writer who helps revise blog posts. 
-          Review the current blog post and make the requested changes while maintaining the overall structure and quality. 
-          ${getTonePrompt(tone)}
-          ${getAudiencePrompt(audience)}
-          ${getStylePrompt(style)}
+          Review the current blog post and make the requested changes while maintaining the overall structure and quality.
+          
+          Writing Guidelines:
+          1. ${getTonePrompt(tone)}
+          2. ${getAudiencePrompt(audience)}
+          3. ${getStylePrompt(style)}
+          
           Return the complete revised post in HTML format with proper tags and structure.
           If images were previously included, maintain them in appropriate positions.`;
       } else {
@@ -82,25 +85,35 @@ export async function POST(request) {
             promptContent += `\nImage ${index + 1}: ${image.url}`;
           });
         }
-        systemPrompt = `You are a professional technical writer who creates engaging and informative blog posts from README files. 
-          Format your response in HTML with proper tags and structure. 
-          ${getTonePrompt(tone)}
-          ${getAudiencePrompt(audience)}
-          ${getStylePrompt(style)}
-          When image URLs are provided, include them in the blog post using appropriate HTML img tags with responsive classes. 
-          Place images in relevant sections to enhance the content.`;
+        systemPrompt = `You are a professional technical writer who creates engaging and informative blog posts. Your task is to transform the provided content into a well-structured, engaging blog post that tells a compelling story about the product or project.
+
+          Key Responsibilities:
+          1. Don't just reformat the content - create a proper blog post that explains the project's value, use cases, and unique features
+          2. Add an engaging introduction that hooks the reader
+          3. Organize information into logical sections with clear headings
+          4. Include relevant examples and use cases
+          5. Add a conclusion that summarizes key points and includes a call to action
+          
+          Writing Guidelines:
+          1. ${getTonePrompt(tone)}
+          2. ${getAudiencePrompt(audience)}
+          3. ${getStylePrompt(style)}
+          
+          Format your response in HTML with proper tags and structure. When image URLs are provided, include them in relevant sections using appropriate HTML img tags with responsive classes.
+          
+          Remember: This is not just a reformatting task - you need to transform the technical content into an engaging blog post that provides value to the reader while maintaining technical accuracy.`;
       }
 
       const message = await anthropic.messages.create({
         model: "claude-3-opus-20240229",
-        max_tokens: 1500,
+        max_tokens: 4000,
         system: systemPrompt,
         messages: [
           {
             role: "user",
             content: revisionPrompt
               ? `Please revise this blog post according to the following request: ${promptContent}`
-              : `Please create a detailed blog post from this content and include any provided images in relevant sections: ${promptContent}`
+              : `Please analyze this content and create an engaging blog post that tells the story of this project/product. Transform the technical details into a narrative that resonates with the target audience while maintaining accuracy: ${promptContent}`
           }
         ]
       });
