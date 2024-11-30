@@ -3,6 +3,27 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+const CUSTOMIZATION_OPTIONS = {
+  tone: [
+    { value: 'casual', label: 'Casual', description: 'Friendly and conversational' },
+    { value: 'professional', label: 'Professional', description: 'Formal and business-oriented' },
+    { value: 'educational', label: 'Educational', description: 'Instructive and explanatory' },
+    { value: 'technical', label: 'Technical', description: 'Detailed and precise' }
+  ],
+  audience: [
+    { value: 'developers', label: 'Developers', description: 'Software developers and engineers' },
+    { value: 'managers', label: 'Managers', description: 'Technical managers and decision-makers' },
+    { value: 'enthusiasts', label: 'Tech Enthusiasts', description: 'Technology enthusiasts and hobbyists' },
+    { value: 'beginners', label: 'Beginners', description: 'Those new to the subject' }
+  ],
+  style: [
+    { value: 'tutorial', label: 'Tutorial', description: 'Step-by-step instructions' },
+    { value: 'overview', label: 'Overview', description: 'High-level concepts and insights' },
+    { value: 'technical', label: 'Technical Analysis', description: 'In-depth technical details' },
+    { value: 'storytelling', label: 'Storytelling', description: 'Narrative-driven explanation' }
+  ]
+};
+
 export default function Home() {
   const [input, setInput] = useState('');
   const [file, setFile] = useState(null);
@@ -15,6 +36,9 @@ export default function Home() {
   const [isUploading, setIsUploading] = useState(false);
   const [revisionPrompt, setRevisionPrompt] = useState('');
   const [isRevising, setIsRevising] = useState(false);
+  const [selectedTone, setSelectedTone] = useState('professional');
+  const [selectedAudience, setSelectedAudience] = useState('developers');
+  const [selectedStyle, setSelectedStyle] = useState('overview');
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -91,7 +115,10 @@ export default function Home() {
         },
         body: JSON.stringify({ 
           content: input,
-          images: uploadedImages
+          images: uploadedImages,
+          tone: selectedTone,
+          audience: selectedAudience,
+          style: selectedStyle
         }),
       });
 
@@ -137,7 +164,10 @@ export default function Home() {
         body: JSON.stringify({ 
           revisionPrompt,
           currentPost: generatedPost,
-          images: uploadedImages
+          images: uploadedImages,
+          tone: selectedTone,
+          audience: selectedAudience,
+          style: selectedStyle
         }),
       });
 
@@ -202,6 +232,28 @@ export default function Home() {
     }
   };
 
+  const CustomSelect = ({ label, options, value, onChange }) => (
+    <div className="space-y-1">
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        {label}
+      </label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 
+                 text-gray-900 dark:text-gray-100 
+                 border border-gray-200 dark:border-gray-600
+                 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      >
+        {options.map(option => (
+          <option key={option.value} value={option.value} title={option.description}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
   return (
     <div className="min-h-screen p-4 sm:p-8 font-[family-name:var(--font-geist-sans)] bg-gray-50 dark:bg-gray-900">
       <main className="max-w-6xl mx-auto space-y-8">
@@ -213,6 +265,29 @@ export default function Home() {
         <div className="space-y-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Development Notes</h2>
+            
+            {/* Customization Options */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <CustomSelect
+                label="Writing Tone"
+                options={CUSTOMIZATION_OPTIONS.tone}
+                value={selectedTone}
+                onChange={setSelectedTone}
+              />
+              <CustomSelect
+                label="Target Audience"
+                options={CUSTOMIZATION_OPTIONS.audience}
+                value={selectedAudience}
+                onChange={setSelectedAudience}
+              />
+              <CustomSelect
+                label="Content Style"
+                options={CUSTOMIZATION_OPTIONS.style}
+                value={selectedStyle}
+                onChange={setSelectedStyle}
+              />
+            </div>
+
             <textarea
               className="w-full h-64 p-4 border rounded-lg bg-gray-50 dark:bg-gray-900 
                        text-gray-900 dark:text-gray-100 

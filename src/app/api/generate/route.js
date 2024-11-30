@@ -1,11 +1,41 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
+const getTonePrompt = (tone) => {
+  const toneMap = {
+    casual: "Use a casual, conversational tone that's friendly and approachable.",
+    professional: "Maintain a professional and formal tone suitable for business contexts.",
+    educational: "Use an instructive tone that focuses on clear explanations and learning.",
+    technical: "Employ a detailed technical tone with precise terminology and in-depth explanations."
+  };
+  return toneMap[tone] || toneMap.professional;
+};
+
+const getAudiencePrompt = (audience) => {
+  const audienceMap = {
+    developers: "Target software developers with appropriate technical depth and code examples.",
+    managers: "Target technical managers and decision-makers, focusing on high-level concepts and business value.",
+    enthusiasts: "Target tech enthusiasts with a balance of technical details and accessible explanations.",
+    beginners: "Target beginners with clear explanations and minimal technical jargon."
+  };
+  return audienceMap[audience] || audienceMap.developers;
+};
+
+const getStylePrompt = (style) => {
+  const styleMap = {
+    tutorial: "Structure the post as a step-by-step tutorial with clear instructions and examples.",
+    overview: "Present a high-level overview with key concepts and insights.",
+    technical: "Create a detailed technical analysis with in-depth explanations.",
+    storytelling: "Use a narrative approach to explain the technical content through a story."
+  };
+  return styleMap[style] || styleMap.overview;
+};
+
 export async function POST(request) {
   try {
     console.log('API Key exists:', !!process.env.ANTHROPIC_API_KEY);
     
-    const { content, images, revisionPrompt, currentPost } = await request.json();
+    const { content, images, revisionPrompt, currentPost, tone, audience, style } = await request.json();
 
     if (!content && !revisionPrompt) {
       return NextResponse.json(
@@ -38,6 +68,9 @@ export async function POST(request) {
         promptContent = `Current blog post:\n${currentPost}\n\nRequested changes:\n${revisionPrompt}`;
         systemPrompt = `You are a professional technical writer who helps revise blog posts. 
           Review the current blog post and make the requested changes while maintaining the overall structure and quality. 
+          ${getTonePrompt(tone)}
+          ${getAudiencePrompt(audience)}
+          ${getStylePrompt(style)}
           Return the complete revised post in HTML format with proper tags and structure.
           If images were previously included, maintain them in appropriate positions.`;
       } else {
@@ -51,6 +84,9 @@ export async function POST(request) {
         }
         systemPrompt = `You are a professional technical writer who creates engaging and informative blog posts from README files. 
           Format your response in HTML with proper tags and structure. 
+          ${getTonePrompt(tone)}
+          ${getAudiencePrompt(audience)}
+          ${getStylePrompt(style)}
           When image URLs are provided, include them in the blog post using appropriate HTML img tags with responsive classes. 
           Place images in relevant sections to enhance the content.`;
       }

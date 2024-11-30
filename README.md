@@ -5,6 +5,8 @@ A Next.js application that transforms development notes and README files into po
 ## Features
 
 - 🤖 AI-powered blog post generation
+- 🎨 Customizable writing style and tone
+- 👥 Target audience selection
 - 📝 Support for uploading README files
 - 🖼️ Image upload and integration
 - ✏️ Interactive revision system
@@ -59,12 +61,36 @@ yarn dev
 ### Converting Development Notes to Blog Posts
 
 1. Enter your development notes in the text area or upload a README file
-2. (Optional) Upload relevant images to enhance your blog post
-3. Click "Generate Blog Post" to create your AI-generated blog post
-4. Review the generated content
-5. If needed, use the revision system to request changes
-6. Select your preferred format (Markdown, HTML, or React)
-7. Click "Export" to download your blog post in the selected format
+2. Customize the blog post generation:
+   - **Writing Tone**: Choose between casual, professional, educational, or technical
+   - **Target Audience**: Select from developers, managers, tech enthusiasts, or beginners
+   - **Content Style**: Pick tutorial, overview, technical analysis, or storytelling
+3. (Optional) Upload relevant images to enhance your blog post
+4. Click "Generate Blog Post" to create your AI-generated blog post
+5. Review the generated content
+6. If needed, use the revision system to request changes
+7. Select your preferred format (Markdown, HTML, or React)
+8. Click "Export" to download your blog post in the selected format
+
+### Customization Options
+
+#### Writing Tone
+- **Casual**: Friendly and conversational
+- **Professional**: Formal and business-oriented
+- **Educational**: Instructive and explanatory
+- **Technical**: Detailed and precise
+
+#### Target Audience
+- **Developers**: Software developers and engineers
+- **Managers**: Technical managers and decision-makers
+- **Tech Enthusiasts**: Technology enthusiasts and hobbyists
+- **Beginners**: Those new to the subject
+
+#### Content Style
+- **Tutorial**: Step-by-step instructions
+- **Overview**: High-level concepts and insights
+- **Technical Analysis**: In-depth technical details
+- **Storytelling**: Narrative-driven explanation
 
 ### Image Upload
 
@@ -105,7 +131,10 @@ Generates or revises a blog post from provided content and images.
       }
     ],
     "revisionPrompt": "Optional revision instructions",
-    "currentPost": "Current blog post content (for revisions)"
+    "currentPost": "Current blog post content (for revisions)",
+    "tone": "professional",
+    "audience": "developers",
+    "style": "overview"
   }
   ```
 
