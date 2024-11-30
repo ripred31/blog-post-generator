@@ -241,16 +241,19 @@ export default function Home() {
 
   const CustomSelect = ({ label, options, value, onChange }) => (
     <div className="space-y-1">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        {label}
-      </label>
+      {label && (
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          {label}
+        </label>
+      )}
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 
                  text-gray-900 dark:text-gray-100 
                  border border-gray-200 dark:border-gray-600
-                 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                 focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
       >
         {options.map(option => (
           <option key={option.value} value={option.value} title={option.description}>
@@ -262,19 +265,26 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen p-4 sm:p-8 font-[family-name:var(--font-geist-sans)] bg-gray-50 dark:bg-gray-900">
-      <main className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen p-4 sm:p-8 font-[family-name:var(--font-geist-sans)] bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <main className="max-w-[90rem] mx-auto space-y-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Blog Post Creator</h1>
-          <p className="text-gray-600 dark:text-gray-400">Transform your development notes into polished blog posts using AI</p>
+          <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+            Blog Post Creator
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400">Transform your development notes into polished blog posts using AI</p>
         </div>
 
-        <div className="space-y-8">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Development Notes</h2>
+        <div className="grid grid-cols-1 gap-8">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Development Notes
+            </h2>
             
             {/* Customization Options */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <CustomSelect
                 label="Writing Tone"
                 options={CUSTOMIZATION_OPTIONS.tone}
@@ -296,11 +306,12 @@ export default function Home() {
             </div>
 
             <textarea
-              className="w-full h-64 p-4 border rounded-lg bg-gray-50 dark:bg-gray-900 
+              className="w-full h-64 p-4 border rounded-xl bg-gray-50 dark:bg-gray-900/50 
                        text-gray-900 dark:text-gray-100 
                        border-gray-200 dark:border-gray-700
                        focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                       placeholder-gray-500 dark:placeholder-gray-400"
+                       placeholder-gray-500 dark:placeholder-gray-400
+                       transition-colors"
               placeholder="Paste your development notes, process details, or technical documentation here..."
               value={input}
               onChange={(e) => {
@@ -309,14 +320,14 @@ export default function Home() {
               }}
             />
             
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="mt-6 space-y-6">
+              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-700">
                 <span className="text-sm text-gray-600 dark:text-gray-400">
                   {file ? `Selected: ${file.name}` : 'Or upload a README file'}
                 </span>
-                <label className="cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 
-                              dark:hover:bg-gray-600 px-4 py-2 rounded-lg transition-colors
-                              border border-gray-200 dark:border-gray-600">
+                <label className="cursor-pointer bg-white dark:bg-gray-800 hover:bg-gray-50 
+                              dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors
+                              border border-gray-200 dark:border-gray-600 shadow-sm">
                   <span className="text-sm text-gray-700 dark:text-gray-300">Choose File</span>
                   <input
                     type="file"
@@ -329,13 +340,13 @@ export default function Home() {
 
               {/* Image Upload Section */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-700">
                   <span className="text-sm text-gray-600 dark:text-gray-400">
                     Add images to your blog post
                   </span>
-                  <label className="cursor-pointer bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 
-                                dark:hover:bg-gray-600 px-4 py-2 rounded-lg transition-colors
-                                border border-gray-200 dark:border-gray-600">
+                  <label className="cursor-pointer bg-white dark:bg-gray-800 hover:bg-gray-50 
+                                dark:hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors
+                                border border-gray-200 dark:border-gray-600 shadow-sm">
                     <span className="text-sm text-gray-700 dark:text-gray-300">
                       {isUploading ? 'Uploading...' : 'Upload Images'}
                     </span>
@@ -351,18 +362,18 @@ export default function Home() {
                 </div>
 
                 {uploadedImages.length > 0 && (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mt-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-700">
                     {uploadedImages.map((image, index) => (
                       <div key={index} className="relative group">
                         <img
                           src={image.url}
                           alt={`Uploaded ${index + 1}`}
-                          className="w-full h-24 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+                          className="w-full h-24 object-cover rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
                         />
                         <button
                           onClick={() => removeImage(index)}
                           className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 
-                                   group-hover:opacity-100 transition-opacity"
+                                   group-hover:opacity-100 transition-opacity shadow-lg"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -377,10 +388,11 @@ export default function Home() {
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating || !input}
-                className={`w-full py-3 rounded-lg font-medium text-white transition-colors
+                className={`w-full py-4 rounded-xl font-medium text-white transition-all
+                  transform hover:scale-[1.02] active:scale-[0.98]
                   ${isGenerating || !input 
                     ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed' 
-                    : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600'}`}
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg'}`}
               >
                 {isGenerating ? (
                   <span className="flex items-center justify-center">
@@ -394,7 +406,7 @@ export default function Home() {
               </button>
 
               {error && (
-                <div className="text-red-500 dark:text-red-400 text-sm mt-2 p-3 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
+                <div className="text-red-500 dark:text-red-400 text-sm p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
                   <p className="font-medium">Error</p>
                   <p>{error}</p>
                 </div>
@@ -402,12 +414,16 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Generated Blog Post</h2>
-              <div className="flex items-center space-x-3">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Generated Blog Post
+              </h2>
+              <div className="flex items-center gap-4">
                 <CustomSelect
-                  label=""
                   options={CUSTOMIZATION_OPTIONS.design}
                   value={selectedDesign}
                   onChange={setSelectedDesign}
@@ -415,10 +431,11 @@ export default function Home() {
                 <select
                   value={selectedFormat}
                   onChange={(e) => setSelectedFormat(e.target.value)}
-                  className="px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 
+                  className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 
                            text-gray-900 dark:text-gray-100 
                            border border-gray-200 dark:border-gray-600
-                           focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                           hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                 >
                   <option value="markdown">Markdown</option>
                   <option value="html">HTML</option>
@@ -427,17 +444,18 @@ export default function Home() {
                 <button
                   onClick={handleExport}
                   disabled={isExporting || !generatedPost}
-                  className={`px-4 py-2 rounded-lg font-medium text-white transition-colors
+                  className={`px-6 py-2 rounded-lg font-medium text-white transition-all
+                    transform hover:scale-[1.02] active:scale-[0.98]
                     ${isExporting || !generatedPost
                       ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
-                      : 'bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600'}`}
+                      : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg'}`}
                 >
                   {isExporting ? 'Exporting...' : 'Export'}
                 </button>
               </div>
             </div>
 
-            <div className={`prose dark:prose-invert max-w-none min-h-[300px] bg-gray-50 dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-auto design-${selectedDesign}`}>
+            <div className={`prose dark:prose-invert max-w-none min-h-[300px] bg-gray-50 dark:bg-gray-900/50 p-8 rounded-xl border border-gray-200 dark:border-gray-700 overflow-auto design-${selectedDesign} shadow-inner`}>
               {generatedPost ? (
                 <div dangerouslySetInnerHTML={{ __html: generatedPost }} />
               ) : (
@@ -449,14 +467,20 @@ export default function Home() {
 
             {/* Revision Request Section */}
             {generatedPost && (
-              <div className="mt-6 space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Request Changes</h3>
+              <div className="mt-8 space-y-4">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                  Request Changes
+                </h3>
                 <textarea
-                  className="w-full h-32 p-4 border rounded-lg bg-gray-50 dark:bg-gray-900 
+                  className="w-full h-32 p-4 border rounded-xl bg-gray-50 dark:bg-gray-900/50 
                            text-gray-900 dark:text-gray-100 
                            border-gray-200 dark:border-gray-700
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                           placeholder-gray-500 dark:placeholder-gray-400"
+                           placeholder-gray-500 dark:placeholder-gray-400
+                           transition-colors shadow-inner"
                   placeholder="Describe the changes you'd like to make to the blog post..."
                   value={revisionPrompt}
                   onChange={(e) => {
@@ -467,10 +491,11 @@ export default function Home() {
                 <button
                   onClick={handleRevision}
                   disabled={isRevising || !revisionPrompt}
-                  className={`w-full py-3 rounded-lg font-medium text-white transition-colors
+                  className={`w-full py-4 rounded-xl font-medium text-white transition-all
+                    transform hover:scale-[1.02] active:scale-[0.98]
                     ${isRevising || !revisionPrompt
                       ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
-                      : 'bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600'}`}
+                      : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg'}`}
                 >
                   {isRevising ? (
                     <span className="flex items-center justify-center">
